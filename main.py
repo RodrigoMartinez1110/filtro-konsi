@@ -158,7 +158,7 @@ if arquivos:
                 st.download_button(
                     label="Baixar CSV",
                     data=csv,
-                    file_name='resultados_filtrados.csv',
+                    file_name=f'{convenio} - {campanha}.csv',
                     mime='text/csv',
                 )
             else:
