@@ -11,8 +11,8 @@ def filtro_novo(base, coeficiente, banco, comissao, parcelas, comissao_min, marg
     base = base.iloc[:, :23]
     
     # Formatando os dados
-    if base['Nome_Cliente'].unique()[0] != "":
-        base['Nome_Cliente'] = base['Nome_Cliente'].apply(lambda x: x.title())
+    if 'Nome_Cliente' in base.columns and base['Nome_Cliente'].notna().any():
+        base['Nome_Cliente'] = base['Nome_Cliente'].apply(lambda x: x.title() if isinstance(x, str) else x)
 
     base['CPF'] = base['CPF'].str.replace(".", "", regex=False).str.replace("-", "", regex=False)
 
