@@ -71,7 +71,8 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
     base = base.iloc[:, :23]
 
     # Formatando os dados
-    base['Nome_Cliente'] = base['Nome_Cliente'].apply(lambda x: x.title())
+    if 'Nome_Cliente' in base.columns and base['Nome_Cliente'].notna().any():
+        base['Nome_Cliente'] = base['Nome_Cliente'].apply(lambda x: x.title() if isinstance(x, str) else x)
     base['CPF'] = base['CPF'].str.replace(".", "", regex=False).str.replace("-", "", regex=False)
 
     # Filtrando matrículas com empréstimos negativos
