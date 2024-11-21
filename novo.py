@@ -117,22 +117,22 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
     # Adicionando informações de banco e parcelas com base em condições específicas
     # Para SEFAZ, que não são da Educação
     base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "banco_emprestimo"] = banco_sefaz
-    base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "parcelas_emprestimo"] = parcelas_sefaz
+    base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "prazo_emprestimo"] = parcelas_sefaz
     base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_sefaz).round(2)
 
     # Para SEFAZ, que são da Educação
     base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "banco_emprestimo"] = banco_sefaz_educ
-    base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "parcelas_emprestimo"] = parcelas_sefaz_educ
+    base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "prazo_emprestimo"] = parcelas_sefaz_educ
     base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_sefaz_educ).round(2)
 
     # Para lotações diferentes de SEFAZ
     base.loc[(base['Lotacao'] != 'SEFAZ'), "banco_emprestimo"] = banco_restante
-    base.loc[(base['Lotacao'] != 'SEFAZ'), "parcelas_emprestimo"] = parcelas_restante
+    base.loc[(base['Lotacao'] != 'SEFAZ'), "prazo_emprestimo"] = parcelas_restante
     base.loc[(base['Lotacao'] != 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_restante).round(2)
 
     # Convertendo tipos de dados
     base["banco_emprestimo"] = base["banco_emprestimo"].astype(int)
-    base["parcelas_emprestimo"] = base["parcelas_emprestimo"].astype(int)
+    base["prazo_emprestimo"] = base["prazo_emprestimo"].astype(int)
 
     # Filtrando por vínculos aceitos, removendo os inválidos
     base = base.loc[~(base['Vinculo_Servidor'].isin(vinculos_invalidos)) | (base['Vinculo_Servidor'].isnull())]
@@ -186,7 +186,7 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
         'prazo_emprestimo', 'prazo_beneficio', 'prazo_cartao',
         'campanha'
     ]
-
+    st.write(base.columns)
     base = base[colunas]
 
     # Retornando a base filtrada
