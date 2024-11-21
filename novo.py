@@ -186,7 +186,23 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
         'prazo_emprestimo', 'prazo_beneficio', 'prazo_cartao',
         'campanha'
     ]
-    st.write(base.columns)
+
+    base.columns = [
+                    'ORIGEM DO DADO', 'NmCliente', 'Matricula', 'NuCPF', 'Dt Nasc',
+                    'MG EmprÃ©stimo Total(R$)', 'MG EmprÃ©stimo DisponÃ­vel(R$)',
+                    'MG BenefÃ­cio Saque Total(R$)', 'MG BenefÃ­cio Saque DisponÃ­vel(R$)',
+                    'MG CartÃ£o Total(R$)', 'MG CartÃ£o DisponÃ­vel(R$)',
+                    'NmConvenio', 'VinculoServidor', 'Lotacao', 'Secretaria',
+                    'FONE1', 'FONE2', 'FONE3', 'FONE4',
+                    'valor_liberado_emprestimo', 'valor_liberado_beneficio', 'valor_liberado_cartao',
+                    'comissao_emprestimo', 'comissao_beneficio', 'comissao_cartao',
+                    'valor_parcela_emprestimo', 'valor_parcela_beneficio', 'valor_parcela_cartao',
+                    'banco_emprestimo', 'banco_beneficio', 'banco_cartao',
+                    'prazo_emprestimo', 'prazo_beneficio', 'prazo_cartao',
+                    'campanha'
+                    ]
+
+    st.write(base.shape)
     base = base[colunas]
 
     # Retornando a base filtrada
