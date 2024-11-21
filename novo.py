@@ -187,7 +187,7 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
         'campanha'
     ]
 
-    base = base[:, colunas]
+    base = base[colunas]
 
     # Retornando a base filtrada
     return base
