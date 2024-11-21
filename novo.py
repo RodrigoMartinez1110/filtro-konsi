@@ -17,8 +17,8 @@ def filtro_novo(base, coeficiente, banco, comissao, parcelas, comissao_min, marg
     base['CPF'] = base['CPF'].str.replace(".", "", regex=False).str.replace("-", "", regex=False)
 
     # Adicionando informações do banco e parcelas
-    base['banco'] = banco
-    base['parcelas'] = parcelas
+    base['banco_emprestimo'] = banco
+    base['prazo_emprestimo'] = parcelas
 
     # Filtrando os vínculos aceitos
     st.write(vinculos_invalidos)
@@ -33,25 +33,57 @@ def filtro_novo(base, coeficiente, banco, comissao, parcelas, comissao_min, marg
             base = base.loc[base['MG_Compulsoria_Disponivel'] >= 0]
 
     # Cálculo do valor liberado e da comissão
-    base['valor_liberado'] = (base['MG_Emprestimo_Disponivel'] * coeficiente).round(2)
-    base['comissao'] = (base['valor_liberado'] * comissao).round(2)
+    base['valor_liberado_emprestimo'] = (base['MG_Emprestimo_Disponivel'] * coeficiente).round(2)
+    base['comissao_emprestimo'] = (base['valor_liberado_emprestimo'] * comissao).round(2)
 
     # Filtrando com base na margem limite e comissão mínima
     base = base.loc[base['MG_Emprestimo_Disponivel'] >= margem_limite]
-    base = base.loc[base['comissao'] >= comissao_min]
+    base = base.loc[base['comissao_emprestimo'] >= comissao_min]
 
     # Ordenando e removendo duplicatas
-    base = base.sort_values(by='valor_liberado', ascending=False)
+    base = base.sort_values(by='valor_liberado_emprestimo', ascending=False)
     base = base.drop_duplicates(subset='CPF')
 
     # Selecionando colunas relevantes
+    base['FONE1'] = ""
+    base['FONE2'] = ""
+    base['FONE3'] = ""
+    base['FONE4'] = ""
+
+    base['valor_liberado_beneficio'] = ""
+    base['valor_liberado_cartao'] = ""
+
+    base['comissao_beneficio'] = ""
+    base['comissao_cartao'] = ""
+
+    base['valor_parcela_emprestimo'] = ""
+    base['valor_parcela_beneficio'] = ""
+    base['valor_parcela_cartao'] = ""
+
+    base['banco_beneficio'] = ""
+    base['banco_cartao'] = ""
+
+    base['prazo_beneficio'] = ""
+    base['prazo_cartao'] = ""
+
+
+
+    base['campanha'] = ''
     colunas = [
         'Origem_Dado', 'Nome_Cliente', 'Matricula', 'CPF', 'Data_Nascimento',
-        'MG_Emprestimo_Total', 'MG_Emprestimo_Disponivel', 'MG_Beneficio_Saque_Total',
-        'MG_Beneficio_Saque_Disponivel', 'MG_Cartao_Total', 'MG_Cartao_Disponivel',
+        'MG_Emprestimo_Total', 'MG_Emprestimo_Disponivel',
+        'MG_Beneficio_Saque_Total', 'MG_Beneficio_Saque_Disponivel',
+        'MG_Cartao_Total', 'MG_Cartao_Disponivel',
         'Convenio', 'Vinculo_Servidor', 'Lotacao', 'Secretaria',
-        'valor_liberado', 'comissao', 'banco', 'parcelas'
+        'FONE1', 'FONE2', 'FONE3', 'FONE4',
+        'valor_liberado_emprestimo', 'valor_liberado_beneficio', 'valor_liberado_cartao',
+        'comissao_emprestimo', 'comissao_beneficio', 'comissao_cartao',
+        'valor_parcela_emprestimo', 'valor_parcela_beneficio', 'valor_parcela_cartao',
+        'banco_emprestimo', 'banco_beneficio', 'banco_cartao',
+        'prazo_emprestimo', 'prazo_beneficio', 'prazo_cartao',
+        'campanha'
     ]
+    
 
     base = base[colunas]
 
@@ -84,23 +116,23 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
 
     # Adicionando informações de banco e parcelas com base em condições específicas
     # Para SEFAZ, que não são da Educação
-    base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "banco"] = banco_sefaz
-    base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "parcelas"] = parcelas_sefaz
-    base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "valor_liberado"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_sefaz).round(2)
+    base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "banco_emprestimo"] = banco_sefaz
+    base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "parcelas_emprestimo"] = parcelas_sefaz
+    base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_sefaz).round(2)
 
     # Para SEFAZ, que são da Educação
-    base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "banco"] = banco_sefaz_educ
-    base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "parcelas"] = parcelas_sefaz_educ
-    base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "valor_liberado"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_sefaz_educ).round(2)
+    base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "banco_emprestimo"] = banco_sefaz_educ
+    base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "parcelas_emprestimo"] = parcelas_sefaz_educ
+    base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_sefaz_educ).round(2)
 
     # Para lotações diferentes de SEFAZ
-    base.loc[(base['Lotacao'] != 'SEFAZ'), "banco"] = banco_restante
-    base.loc[(base['Lotacao'] != 'SEFAZ'), "parcelas"] = parcelas_restante
-    base.loc[(base['Lotacao'] != 'SEFAZ'), "valor_liberado"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_restante).round(2)
+    base.loc[(base['Lotacao'] != 'SEFAZ'), "banco_emprestimo"] = banco_restante
+    base.loc[(base['Lotacao'] != 'SEFAZ'), "parcelas_emprestimo"] = parcelas_restante
+    base.loc[(base['Lotacao'] != 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_restante).round(2)
 
     # Convertendo tipos de dados
-    base["banco"] = base["banco"].astype(int)
-    base["parcelas"] = base["parcelas"].astype(int)
+    base["banco_emprestimo"] = base["banco_emprestimo"].astype(int)
+    base["parcelas_emprestimo"] = base["parcelas_emprestimo"].astype(int)
 
     # Filtrando por vínculos aceitos, removendo os inválidos
     base = base.loc[~(base['Vinculo_Servidor'].isin(vinculos_invalidos)) | (base['Vinculo_Servidor'].isnull())]
@@ -109,21 +141,50 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
     base.loc[base['Vinculo_Servidor'] == '8 - ESTAB. CONSTIT.', 'banco'] = 707
 
     # Ordenando a base por valor liberado e removendo duplicatas
-    base = base.sort_values(by='valor_liberado', ascending=False).drop_duplicates(['CPF'])
+    base = base.sort_values(by='valor_liberado_emprestimo', ascending=False).drop_duplicates(['CPF'])
 
     # Cálculo da comissão
-    base['comissao'] = (base['valor_liberado'] * comissao).round(2)
+    base['comissao_emprestimo'] = (base['valor_liberado_emprestimo'] * comissao).round(2)
 
     # Filtrando pela comissão mínima
-    base = base.loc[base['comissao'] >= comissao_min]
+    base = base.loc[base['comissao_emprestimo'] >= comissao_min]
 
-    # Selecionando colunas relevantes para retorno
+        # Selecionando colunas relevantes
+    base['FONE1'] = ""
+    base['FONE2'] = ""
+    base['FONE3'] = ""
+    base['FONE4'] = ""
+
+    base['valor_liberado_beneficio'] = ""
+    base['valor_liberado_cartao'] = ""
+
+    base['comissao_beneficio'] = ""
+    base['comissao_cartao'] = ""
+
+    base['valor_parcela_emprestimo'] = ""
+    base['valor_parcela_beneficio'] = ""
+    base['valor_parcela_cartao'] = ""
+
+    base['banco_beneficio'] = ""
+    base['banco_cartao'] = ""
+
+    base['prazo_beneficio'] = ""
+    base['prazo_cartao'] = ""
+
+    base['campanha'] = ''
     colunas = [
         'Origem_Dado', 'Nome_Cliente', 'Matricula', 'CPF', 'Data_Nascimento',
-        'MG_Emprestimo_Total', 'MG_Emprestimo_Disponivel', 'MG_Beneficio_Saque_Total',
-        'MG_Beneficio_Saque_Disponivel', 'MG_Cartao_Total', 'MG_Cartao_Disponivel',
+        'MG_Emprestimo_Total', 'MG_Emprestimo_Disponivel',
+        'MG_Beneficio_Saque_Total', 'MG_Beneficio_Saque_Disponivel',
+        'MG_Cartao_Total', 'MG_Cartao_Disponivel',
         'Convenio', 'Vinculo_Servidor', 'Lotacao', 'Secretaria',
-        'valor_liberado', 'comissao', 'banco', 'parcelas'
+        'FONE1', 'FONE2', 'FONE3', 'FONE4',
+        'valor_liberado_emprestimo', 'valor_liberado_beneficio', 'valor_liberado_cartao',
+        'comissao_emprestimo', 'comissao_beneficio', 'comissao_cartao',
+        'valor_parcela_emprestimo', 'valor_parcela_beneficio', 'valor_parcela_cartao',
+        'banco_emprestimo', 'banco_beneficio', 'banco_cartao',
+        'prazo_emprestimo', 'prazo_beneficio', 'prazo_cartao',
+        'campanha'
     ]
 
     # Retornando a base filtrada
