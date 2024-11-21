@@ -190,4 +190,4 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
     base = base[colunas]
 
     # Retornando a base filtrada
-    return base.loc[:, colunas]  # Retorna o DataFrame filtrado
+    return base
