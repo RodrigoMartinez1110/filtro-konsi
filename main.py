@@ -44,8 +44,8 @@ def escolha_campanha(campanha, base, vinculos_invalidos):
     )
 
     # Atualizando a seleção de vínculos não aceitos
-        # PREF GOIANIA É LOTACAO
-    if convenio == 'prefgyn':
+        # PREF GOIANIA e GOV AM é lotação
+    if convenio == 'prefgyn' or convenio == 'govam':
         vinculos_validos = base[~base['Lotacao'].isin(vinculos_invalidos)]['Lotacao'].unique()
         vinculos_invalidos = st.sidebar.multiselect(
             f"Escolha as Lotacões NÃO ACEITAS em {convenio}:", 
