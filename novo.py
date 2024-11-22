@@ -66,35 +66,35 @@ def filtro_novo(base, coeficiente, banco, comissao, parcelas, comissao_min, marg
     base['prazo_beneficio'] = ""
     base['prazo_cartao'] = ""
 
-    base['campanha'] = ''
+    base['Campanha'] = ''
 
     colunas = [
-    'Origem_Dado', 'Nome_Cliente', 'Matricula', 'CPF', 'Data_Nascimento',
-    'MG_Emprestimo_Total', 'MG_Emprestimo_Disponivel',
-    'MG_Beneficio_Saque_Total', 'MG_Beneficio_Saque_Disponivel',
-    'MG_Cartao_Total', 'MG_Cartao_Disponivel',
-    'Convenio', 'Vinculo_Servidor', 'Lotacao', 'Secretaria',
-    'FONE1', 'FONE2', 'FONE3', 'FONE4',
-    'valor_liberado_emprestimo', 'valor_liberado_beneficio', 'valor_liberado_cartao',
-    'comissao_emprestimo', 'comissao_beneficio', 'comissao_cartao',
-    'valor_parcela_emprestimo', 'valor_parcela_beneficio', 'valor_parcela_cartao',
-    'banco_emprestimo', 'banco_beneficio', 'banco_cartao',
-    'prazo_emprestimo', 'prazo_beneficio', 'prazo_cartao',
-    'campanha'
+        'Origem_Dado', 'Nome_Cliente', 'Matricula', 'CPF', 'Data_Nascimento',
+        'MG_Emprestimo_Total', 'MG_Emprestimo_Disponivel',
+        'MG_Beneficio_Saque_Total', 'MG_Beneficio_Saque_Disponivel',
+        'MG_Cartao_Total', 'MG_Cartao_Disponivel',
+        'Convenio', 'Vinculo_Servidor', 'Lotacao', 'Secretaria',
+        'FONE1', 'FONE2', 'FONE3', 'FONE4',
+        'valor_liberado_emprestimo', 'valor_liberado_beneficio', 'valor_liberado_cartao',
+        'comissao_emprestimo', 'comissao_beneficio', 'comissao_cartao',
+        'valor_parcela_emprestimo', 'valor_parcela_beneficio', 'valor_parcela_cartao',
+        'banco_emprestimo', 'banco_beneficio', 'banco_cartao',
+        'prazo_emprestimo', 'prazo_beneficio', 'prazo_cartao',
+        'Campanha'
     ]
 
     base = base[colunas]
 
     mapeamento = {
-    'Origem_Dado': 'ORIGEM DO DADO',
-    'MG_Emprestimo_Total': 'Mg_Emprestimo_Total',
-    'MG_Emprestimo_Disponivel': 'Mg_Emprestimo_Disponivel',
-    'MG_Beneficio_Saque_Total': 'Mg_Beneficio_Saque_Total',
-    'MG_Beneficio_Saque_Disponivel': 'Mg_Beneficio_Saque_Disponivel',
-    'MG_Cartao_Total': 'Mg_Cartao_Total',
-    'MG_Cartao_Disponivel': 'Mg_Cartao_Disponivel',
-    'campanha': 'Campanha'
-}
+        'Origem_Dado': 'ORIGEM DO DADO',
+        'MG_Emprestimo_Total': 'Mg_Emprestimo_Total',
+        'MG_Emprestimo_Disponivel': 'Mg_Emprestimo_Disponivel',
+        'MG_Beneficio_Saque_Total': 'Mg_Beneficio_Saque_Total',
+        'MG_Beneficio_Saque_Disponivel': 'Mg_Beneficio_Saque_Disponivel',
+        'MG_Cartao_Total': 'Mg_Cartao_Total',
+        'MG_Cartao_Disponivel': 'Mg_Cartao_Disponivel',
+        'campanha': 'Campanha'
+    }
 
     # Renomear as colunas
     base.rename(columns=mapeamento, inplace=True)

@@ -16,32 +16,34 @@ from beneficio_consignado import filtro_beneficio_consignado
 
 # Função para selecionar as variáveis da campanha
 def escolha_campanha(campanha, base, vinculos_invalidos):
-    bancos = ['2', '243', '422', '623', '643', '707', '33', '955']
+    bancos = ['2', '33', '74', '243', '422', '465', '623', '643', '707', '955']
     if campanha != "Beneficio & Cartao":
         banco = st.sidebar.selectbox(f"Banco do coeficiente {campanha}", bancos, key=f"banco_{campanha}")
-        coeficiente = st.sidebar.number_input(f"Digite o coeficiente da campanha {campanha}:", min_value=0.0, max_value=100.1)
-        comissao = round(st.sidebar.number_input(f"Digite a comissão da campanha {campanha} em %:", min_value=0.0, max_value=100.0, step=0.01) / 100, 2)
-        parcelas = st.sidebar.slider(f'Quantidade de parcelas {campanha}', min_value=1, max_value=180, step=1)
+        coeficiente = st.sidebar.number_input(f"Coeficiente {campanha}:", min_value=0.0, max_value=100.1)
+        comissao = round(st.sidebar.number_input(f"Comissao {campanha} (%):", min_value=0.0, max_value=100.0, step=0.01) / 100, 2)
+        parcelas = st.sidebar.slider(f'Quant. de parcelas {campanha}', min_value=1, max_value=180, step=1)
 
     else:
-        banco_beneficio = st.sidebar.selectbox(f"Banco do coeficiente {campanha}", bancos, key=f"banco_{campanha}")
-        banco_consignado = st.sidebar.selectbox(f"Banco do coeficiente {campanha}", bancos, key=f"banco_{campanha}2")
+        banco_beneficio = st.sidebar.selectbox(f"Banco do coeficiente Beneficio", bancos, key=f"banco_{campanha}")
+        banco_consignado = st.sidebar.selectbox(f"Banco do coeficiente Cartão", bancos, key=f"banco_{campanha}2")
 
-        coeficiente_beneficio = st.sidebar.number_input(f"Digite o coeficiente do Cartão Beneficio:", min_value=0.0, max_value=100.1)
-        coeficiente_consignado = st.sidebar.number_input(f"Digite o coeficiente do Cartao Consignado:", min_value=0.0, max_value=100.1)
+        coeficiente_beneficio = st.sidebar.number_input(f"Coeficiente do Beneficio:", min_value=0.0, max_value=100.1)
+        coeficiente_consignado = st.sidebar.number_input(f"Coeficiente do Cartão:", min_value=0.0, max_value=100.1)
 
-        comissao_beneficio = round(st.sidebar.number_input(f"Digite a comissão da campanha Cartão Beneficio em %:", min_value=0.0, max_value=100.0, step=0.01) / 100, 2)
-        comissao_consignado = round(st.sidebar.number_input(f"Digite a comissão da campanha Cartao Consignado em %:", min_value=0.0, max_value=100.0, step=0.01) / 100, 2)
+        comissao_beneficio = round(st.sidebar.number_input(f"Comissão Cartão Beneficio em %:", min_value=0.0, max_value=100.0, step=0.01) / 100, 2)
+        comissao_consignado = round(st.sidebar.number_input(f"Comissão Cartao Consignado em %:", min_value=0.0, max_value=100.0, step=0.01) / 100, 2)
 
-        parcelas_beneficio = st.sidebar.slider(f'Quantidade de parcelas Cartão Beneficio', min_value=1, max_value=180, step=1)
-        parcelas_consignado = st.sidebar.slider(f'Quantidade de parcelas Cartao Consignado', min_value=1, max_value=180, step=1)
+        parcelas_beneficio = st.sidebar.slider(f'Quant. de parcelas Cartão Beneficio', min_value=1, max_value=180, step=1)
+        parcelas_consignado = st.sidebar.slider(f'Quant. de parcelas Cartao Consignado', min_value=1, max_value=180, step=1)
 
-    comissao_min = st.sidebar.number_input("Comissão mínima para filtrar:")
+    comissao_min = st.sidebar.number_input("Filtro Comissão mínima:")
+    st.sidebar.caption("Exemplo: 500")
 
     margem_limite = st.sidebar.number_input(
-        f"Digite o valor {'mínimo' if campanha == 'Novo' else 'máximo'} de margem limite", 
+        f"Margem {'mínimo' if campanha == 'Novo' else 'máximo'} de margem limite", 
         min_value=0.0, max_value=1000.0
     )
+    st.sidebar.caption("Exemplo: 150")
 
     # Atualizando a seleção de vínculos não aceitos
         # PREF GOIANIA e GOV AM é lotação
@@ -68,30 +70,35 @@ def escolha_campanha(campanha, base, vinculos_invalidos):
 
 # Função específica para campanha govsp
 def escolha_campanha_govsp(campanha, base, vinculos_invalidos):
-    bancos = ['2', '243', '422', '623', '643', '707', '33', '955']
+    bancos = ['2', '33', '74', '243', '422', '465', '623', '643', '707', '955']
 
     st.sidebar.write("**SEFAZ**")
-    coeficiente_sefaz = st.sidebar.number_input(f"Digite o coeficiente da campanha {campanha} sefaz:", min_value=0.0, max_value=100.1)
+    coeficiente_sefaz = st.sidebar.number_input(f"Coeficiente da campanha {campanha} sefaz:", min_value=0.0, max_value=100.1)
     banco_sefaz = st.sidebar.selectbox(f"Banco do coeficiente {campanha} sefaz", bancos)
     parcelas_sefaz = st.sidebar.slider(f'Quantidade de parcelas {campanha} sefaz', min_value=1, max_value=180, step=1)
     st.sidebar.write("---")
 
     st.sidebar.write("**SEFAZ EDUCAÇÃO**")
-    coeficiente_sefaz_educ = st.sidebar.number_input(f"Digite o coeficiente da campanha {campanha} sefaz educação:", min_value=0.0, max_value=100.1)
+    coeficiente_sefaz_educ = st.sidebar.number_input(f"Coeficiente da campanha {campanha} sefaz educação:", min_value=0.0, max_value=100.1)
     banco_sefaz_educ = st.sidebar.selectbox(f"Banco do coeficiente {campanha} sefaz educação", bancos)
     parcelas_sefaz_educ = st.sidebar.slider(f'Quantidade de parcelas {campanha} sefaz educação', min_value=1, max_value=180, step=1)
     st.sidebar.write("---")
 
     st.sidebar.write("**PMESP E SPPREV**")
-    coeficiente_restante = st.sidebar.number_input(f"Digite o coeficiente da campanha {campanha} restante:", min_value=0.0, max_value=100.1)
+    coeficiente_restante = st.sidebar.number_input(f"Coeficiente da campanha {campanha} restante:", min_value=0.0, max_value=100.1)
     banco_restante = st.sidebar.selectbox(f"Banco do coeficiente {campanha} restante (spprev e pmesp)", bancos)
     parcelas_restante = st.sidebar.slider(f'Quantidade de parcelas {campanha} restante', min_value=1, max_value=180, step=1)
     st.sidebar.write("---")
 
     st.sidebar.write("**Filtros gerais**")
-    margem_limite = st.sidebar.number_input(f"Digite o valor mínimo de margem limite", min_value=0.0, max_value=1000.0)
+    
     comissao = round(st.sidebar.number_input(f"Digite a comissão da campanha {campanha} em %:", min_value=0.0, max_value=100.0, step=0.01) / 100, 2)
-    comissao_min = st.sidebar.number_input("Comissão mínima para filtrar:")
+
+    comissao_min = st.sidebar.number_input("Filtro Comissão mínima:")
+    st.sidebar.caption("Exemplo: 500")
+
+    margem_limite = st.sidebar.number_input(f"Digite o valor mínimo de margem limite", min_value=0.0, max_value=1000.0)
+    st.sidebar.caption("Exemplo: 150")
 
     # Atualizando a seleção de vínculos não aceitos
     vinculos_validos = base[~base['Vinculo_Servidor'].isin(vinculos_invalidos)]['Vinculo_Servidor'].unique()
@@ -121,7 +128,7 @@ if arquivos:
 
         # Configuração do sidebar para seleção de campanha
         st.sidebar.title("Variáveis")
-        campanha = st.sidebar.selectbox("Escolha o tipo de campanha:", ['Novo', 'Beneficio', 'Cartao', 'Beneficio & Cartao'])
+        campanha = st.sidebar.selectbox("Tipo da Campanha:", ['Novo', 'Beneficio', 'Cartao', 'Beneficio & Cartao'])
         st.sidebar.write("---")
 
         # Inicializa a lista de vínculos inválidos
