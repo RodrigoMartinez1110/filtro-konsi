@@ -6,6 +6,8 @@ def filtro_beneficio(base, coeficiente, banco, comissao, parcelas, comissao_min,
     if base.empty:
         st.error("Erro: A base está vazia.")
         return pd.DataFrame()
+
+    convenio = base['Convenio'].unique()[0]
     
     # Limitando as colunas se necessário
     base = base.iloc[:, :23]
@@ -28,7 +30,12 @@ def filtro_beneficio(base, coeficiente, banco, comissao, parcelas, comissao_min,
     base = base.loc[~base['Vinculo_Servidor'].isin(vinculos_invalidos) | base['Vinculo_Servidor'].isnull()]
 
     # Cálculo do valor liberado
-    base['valor_liberado_beneficio'] = (base['MG_Beneficio_Saque_Disponivel'] * coeficiente).round(2)
+    if convenio == 'goval':
+        base['valor_liberado_beneficio'] = ((base['MG_Beneficio_Saque_Disponivel'] + base['MG_Beneficio_Compra_Total']) * coeficiente).round(2)
+    elif convenio == 'govam':
+        base['valor_liberado_beneficio'] = (base['MG_Beneficio_Compra_Disponivel'] * coeficiente).round(2)
+    else:
+        base['valor_liberado_beneficio'] = (base['MG_Beneficio_Saque_Disponivel'] * coeficiente).round(2)
     
     # Cálculo da comissão
     base['comissao_beneficio'] = (base['valor_liberado_beneficio'] * comissao).round(2)
