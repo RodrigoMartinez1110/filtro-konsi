@@ -32,6 +32,7 @@ def filtro_beneficio(base, coeficiente, banco, comissao, parcelas, comissao_min,
     # Cálculo do valor liberado
     if convenio == 'goval':
         base['valor_liberado_beneficio'] = ((base['MG_Beneficio_Saque_Disponivel'] + base['MG_Beneficio_Compra_Total']) * coeficiente).round(2)
+        base['MG_Beneficio_Saque_Disponivel'] = (base['MG_Beneficio_Saque_Disponivel'] + base['MG_Beneficio_Compra_Total'])
     elif convenio == 'govam':
         base['valor_liberado_beneficio'] = (base['MG_Beneficio_Compra_Disponivel'] * coeficiente).round(2)
     else:

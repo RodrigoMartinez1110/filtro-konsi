@@ -17,6 +17,9 @@ def filtro_beneficio_consignado(base, coeficiente_beneficio, coeficiente_consign
     # Identificando o convênio único
     convenio = base['Convenio'].unique()[0]
 
+    if convenio == 'goval':
+        base['MG_Beneficio_Saque_Disponivel'] = (base['MG_Beneficio_Saque_Disponivel'] + base['MG_Beneficio_Compra_Total'])
+
     # Definindo variáveis para o cálculo de margens e restrições específicas do GOVSP
     if convenio == 'govsp':
         base['margem_beneficio_usada'] = base['MG_Beneficio_Saque_Total'] - base['MG_Beneficio_Saque_Disponivel']
