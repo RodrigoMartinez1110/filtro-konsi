@@ -217,7 +217,6 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
     base.rename(columns=mapeamento, inplace=True)
 
     st.write(base.shape)
-    base = base[colunas]
 
     # Retornando a base filtrada
     return base
