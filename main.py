@@ -16,7 +16,7 @@ from beneficio_consignado import filtro_beneficio_consignado
 
 # Função para selecionar as variáveis da campanha
 def escolha_campanha(campanha, base, vinculos_invalidos):
-    bancos = ['2', '33', '74', '243', '422', '465', '623', '643', '707', '955']
+    bancos = ['2', '33', '74', '243', '422', '465', '623', '643', '707', '955', '6613']
     if campanha != "Beneficio & Cartao":
         banco = st.sidebar.selectbox(f"Banco do coeficiente {campanha}", bancos, key=f"banco_{campanha}")
         coeficiente = st.sidebar.number_input(f"Coeficiente {campanha}:", min_value=0.0, max_value=100.1)
@@ -70,7 +70,7 @@ def escolha_campanha(campanha, base, vinculos_invalidos):
 
 # Função específica para campanha govsp
 def escolha_campanha_govsp(campanha, base, vinculos_invalidos):
-    bancos = ['2', '33', '74', '243', '422', '465', '623', '643', '707', '955']
+    bancos = ['2', '33', '74', '243', '422', '465', '623', '643', '707', '955', '6613']
 
     st.sidebar.write("**SEFAZ**")
     coeficiente_sefaz = st.sidebar.number_input(f"Coeficiente da campanha {campanha} sefaz:", min_value=0.0, max_value=100.1)
