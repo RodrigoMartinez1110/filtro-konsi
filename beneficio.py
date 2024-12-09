@@ -17,7 +17,7 @@ def filtro_beneficio(base, coeficiente, banco, comissao, parcelas, comissao_min,
     base['prazo_beneficio'] = parcelas
     
     # Formatando os dados
-    base['Nome_Cliente'] = base['Nome_Cliente'].apply(lambda x: x.title())
+    base['Nome_Cliente'] = base['Nome_Cliente'].apply(lambda x: x.title() if pd.notnull(x) and x.strip() != '' else x)
     base['CPF'] = base['CPF'].str.replace(".", "", regex=False).str.replace("-", "", regex=False)
 
     # Filtrando registros com MG_Emprestimo_Disponivel abaixo da margem limite

@@ -11,62 +11,56 @@ def filtro_beneficio_consignado(base, coeficiente_beneficio, coeficiente_consign
         st.error("Erro: A base está vazia.")
         return pd.DataFrame()
     
-    # Limitando as colunas para as primeiras 23, se necessário
     base = base.iloc[:, :23]
 
-    # Identificando o convênio único
     convenio = base['Convenio'].unique()[0]
+    base['valor_liberado_beneficio'] = 0
+    base['valor_liberado_cartao'] = 0
 
-    if convenio == 'goval':
-        base['MG_Beneficio_Saque_Disponivel'] = (base['MG_Beneficio_Saque_Disponivel'] + base['MG_Beneficio_Compra_Total'])
+    if convenio == "goval":
+        if (base['MG_Beneficio_Saque_Disponivel'] == base['MG_Beneficio_Saque_Total']) & (base['MG_Beneficio_Compra_Disponivel'] == base['MG_Beneficio_Compra_Total']):
+            base['MG_Beneficio_Saque_Disponivel'] = base['MG_Beneficio_Saque_Disponivel'] + base['MG_Beneficio_Compra_Disponivel']
+            base.loc[(base['MG_Beneficio_Saque_Disponivel'] > 20), "valor_liberado_beneficio"] = (base['MG_Beneficio_Saque_Disponivel'] * coeficiente_beneficio).round(2)
+        else:
+            base.loc[(base['MG_Beneficio_Saque_Disponivel'] > 20), "valor_liberado_beneficio"] = (base['MG_Beneficio_Saque_Disponivel'] * 18.08).round(2)
 
-    # Definindo variáveis para o cálculo de margens e restrições específicas do GOVSP
-    if convenio == 'govsp':
+        base.loc[(base['MG_Cartao_Disponivel'] == base['MG_Cartao_Total']), "valor_liberado_cartao"] = base['MG_Cartao_Disponivel'] * coeficiente_consignado
+
+    elif convenio == 'govsp':
         base['margem_beneficio_usada'] = base['MG_Beneficio_Saque_Total'] - base['MG_Beneficio_Saque_Disponivel']
         base['margem_cartao_usada'] = base['MG_Cartao_Total'] - base['MG_Cartao_Disponivel']
         usou_beneficio = base.loc[base['margem_beneficio_usada'] > 0]
         usou_cartao = base.loc[base['margem_cartao_usada'] > 0]
 
-    # Cálculo do valor liberado de acordo com o convênio
-    base['valor_liberado_beneficio'] = 0
-    base['valor_liberado_cartao'] = 0
-
-    if convenio == 'govsp':
         base.loc[base['margem_beneficio_usada'] == 0, 'valor_liberado_beneficio'] = (base['MG_Beneficio_Saque_Disponivel'] * coeficiente_beneficio).round(2)
         base.loc[base['margem_cartao_usada'] == 0, 'valor_liberado_cartao'] = (base['MG_Cartao_Disponivel'] * coeficiente_consignado).round(2)
-        
         # Para Celetistas (vínculo 4) que não usaram margem de benefício
         base.loc[(base['Vinculo_Servidor'] == '4 - Celetista') & (base['margem_beneficio_usada'] == 0), 'valor_liberado_beneficio'] = (base['MG_Beneficio_Saque_Disponivel'] * coeficiente_beneficio).round(2)
         base.loc[(base['Vinculo_Servidor'] == '4 - Celetista') & (base['margem_cartao_usada'] == 0), 'valor_liberado_cartao'] = 0
+
     else:
         base['valor_liberado_beneficio'] = (base['MG_Beneficio_Saque_Disponivel'] * coeficiente_beneficio).round(2)
         base['valor_liberado_cartao'] = (base['MG_Cartao_Disponivel'] * coeficiente_consignado).round(2)
 
-    # Filtrando registros com 'MG_Emprestimo_Disponivel' abaixo do limite de margem
+
     base = base[base['MG_Emprestimo_Disponivel'] < margem_limite]
 
-    # Excluindo vínculos inválidos
     base = base[~base['Vinculo_Servidor'].isin(vinculos_invalidos) | base['Vinculo_Servidor'].isnull()]
 
-    # Excluindo lotação 'ALESP' do convênio GOVSP
+
     if convenio == 'govsp':
         base = base[base['Lotacao'] != "ALESP"]
 
-    # Restrição de GOVSP para provimentos específicos
-    if convenio == 'govsp':
         base = base[(base['valor_liberado_beneficio'] != 0) | (base['valor_liberado_cartao'] != 0)]
         base.loc[(base['valor_liberado_beneficio'] != 0) & (base['Matricula'].isin(usou_beneficio['Matricula'])), 'valor_liberado_beneficio'] = 0
         base.loc[(base['valor_liberado_cartao'] != 0) & (base['Matricula'].isin(usou_cartao['Matricula'])), 'valor_liberado_cartao'] = 0
 
-    # Cálculo da comissão sobre os valores liberados
     base['comissao_beneficio'] = (base['valor_liberado_beneficio'] * comissao_beneficio).round(2)
     base['comissao_cartao'] = (base['valor_liberado_cartao'] * comissao_consignado).round(2)
     base['comissao_total'] = (base['comissao_beneficio'] + base['comissao_cartao']).round(2)
 
-    # Filtrando registros com comissão total acima do mínimo
     base = base[base['comissao_total'] >= comissao_min]
 
-    # Ordenação por comissão total e remoção de duplicatas por CPF
     base = base.sort_values(by='comissao_total', ascending=False)
     base = base.drop_duplicates(subset=['CPF'])
 
@@ -133,4 +127,3 @@ def filtro_beneficio_consignado(base, coeficiente_beneficio, coeficiente_consign
     st.write(base.shape)
 
     return base  # Retorna o DataFrame filtrado
-
