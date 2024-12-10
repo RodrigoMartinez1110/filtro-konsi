@@ -24,6 +24,7 @@ def filtro_beneficio_consignado(base, coeficiente_beneficio, coeficiente_consign
         )
         base['coeficiente'] = 18.08  # Valor padrão
         base.loc[condicao, 'coeficiente'] = coeficiente_beneficio
+        base.loc[condicao, 'MG_Beneficio_Saque_Disponivel'] = (base['MG_Beneficio_Saque_Disponivel'] + base['MG_Beneficio_Compra_Disponivel']).round(2)
 
         base.loc[
         base['MG_Beneficio_Saque_Disponivel'] > 20, 
@@ -51,7 +52,7 @@ def filtro_beneficio_consignado(base, coeficiente_beneficio, coeficiente_consign
         base.loc[base['MG_Beneficio_Saque_Disponivel'] == base['MG_Beneficio_Saque_Total'], 'valor_liberado_beneficio'] = (base['MG_Beneficio_Saque_Disponivel'] * coeficiente_beneficio).round(2)
     
     
-    base.loc[base['MG_Cartao_Disponivel'] == base['MG_Cartao_Total'], 'valor_liberado_cartao'] = (base['MG_Cartao_Disponivel'] * coeficiente_beneficio).round(2)
+    base.loc[base['MG_Cartao_Disponivel'] == base['MG_Cartao_Total'], 'valor_liberado_cartao'] = (base['MG_Cartao_Disponivel'] * coeficiente_consignado).round(2)
 
 
     base = base[base['MG_Emprestimo_Disponivel'] < margem_limite]
