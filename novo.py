@@ -122,6 +122,7 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
 
     # Filtrando matrículas com empréstimos negativos
     negativos = base.loc[base['MG_Emprestimo_Disponivel'] < 0, ['Matricula', 'Nome_Cliente', 'MG_Emprestimo_Disponivel']]
+    base = base.sort_values(by='MG_Emprestimo_Disponivel', ascending=True)
     base = base.loc[~base['Matricula'].isin(negativos['Matricula'])]
 
     # Filtrando pela margem mínima disponível
@@ -131,17 +132,17 @@ def filtro_novo_govsp(base, coeficiente_sefaz, coeficiente_sefaz_educ, coeficien
     # Para SEFAZ, que não são da Educação
     base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "banco_emprestimo"] = banco_sefaz
     base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "prazo_emprestimo"] = parcelas_sefaz
-    base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * 0.95 * coeficiente_sefaz).round(2)
+    base.loc[(base['Secretaria'] != '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_sefaz).round(2)
 
     # Para SEFAZ, que são da Educação
     base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "banco_emprestimo"] = banco_sefaz_educ
     base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "prazo_emprestimo"] = parcelas_sefaz_educ
-    base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * 0.95 * coeficiente_sefaz_educ).round(2)
+    base.loc[(base['Secretaria'] == '08 - SECRETARIA DA EDUCACAO') & (base['Lotacao'] == 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_sefaz_educ).round(2)
 
     # Para lotações diferentes de SEFAZ
     base.loc[(base['Lotacao'] != 'SEFAZ'), "banco_emprestimo"] = banco_restante
     base.loc[(base['Lotacao'] != 'SEFAZ'), "prazo_emprestimo"] = parcelas_restante
-    base.loc[(base['Lotacao'] != 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * 0.95 * coeficiente_restante).round(2)
+    base.loc[(base['Lotacao'] != 'SEFAZ'), "valor_liberado_emprestimo"] = (base['MG_Emprestimo_Disponivel'] * coeficiente_restante).round(2)
 
     # Convertendo tipos de dados
     base["banco_emprestimo"] = base["banco_emprestimo"].astype(int)
