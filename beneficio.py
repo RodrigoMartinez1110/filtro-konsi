@@ -24,7 +24,8 @@ def filtro_beneficio(base, coeficiente, banco, comissao, parcelas, comissao_min,
     base = base.loc[base['MG_Emprestimo_Disponivel'] < margem_limite]
 
     # Filtrando registros com MG_Beneficio_Total igual a MG_Beneficio_livre
-    base = base.loc[base['MG_Beneficio_Saque_Disponivel'] == base['MG_Beneficio_Saque_Total']]
+    if convenio != 'prefrj':
+        base = base.loc[base['MG_Beneficio_Saque_Disponivel'] == base['MG_Beneficio_Saque_Total']]
 
     # Filtrando os vínculos aceitos
     base = base.loc[~base['Vinculo_Servidor'].isin(vinculos_invalidos) | base['Vinculo_Servidor'].isnull()]
