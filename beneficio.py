@@ -8,6 +8,7 @@ def filtro_beneficio(base, coeficiente, banco, comissao, parcelas, comissao_min,
         return pd.DataFrame()
 
     convenio = base['Convenio'].unique()[0]
+    st.write(convenio)
     
     # Limitando as colunas se necessário
     base = base.iloc[:, :23]
