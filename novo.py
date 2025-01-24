@@ -7,8 +7,7 @@ def filtro_novo(base, coeficiente, banco, comissao, parcelas, comissao_min, marg
         st.error("Erro: A base está vazia.")
         return pd.DataFrame()
     
-    # Limitando as colunas se necessário
-    base = base.iloc[:, :23]
+    
     
     # Formatando os dados
     if 'Nome_Cliente' in base.columns and base['Nome_Cliente'].notna().any():
@@ -31,6 +30,9 @@ def filtro_novo(base, coeficiente, banco, comissao, parcelas, comissao_min, marg
             base = base.loc[~base['Matricula'].isin(negativos['Matricula'])]
         elif base['Convenio'].str.contains('govmt', case=False, na=False).any():
             base = base.loc[base['MG_Compulsoria_Disponivel'] >= 0]
+
+    # Limitando as colunas se necessário
+    base = base.iloc[:, :23]
 
     # Cálculo do valor liberado e da comissão
     base['valor_liberado_emprestimo'] = (base['MG_Emprestimo_Disponivel'] * coeficiente).round(2)
