@@ -11,7 +11,7 @@ def filtro_beneficio(base, coeficiente, banco, comissao, parcelas, comissao_min,
     st.write(convenio)
     
     # Limitando as colunas se necessário
-    base = base.iloc[:, :23]
+    base = base.iloc[:, :26]
     
     # Adicionando informações do banco e parcelas
     base['banco_beneficio'] = banco
