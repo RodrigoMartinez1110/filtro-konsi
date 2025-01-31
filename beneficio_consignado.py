@@ -11,7 +11,7 @@ def filtro_beneficio_consignado(base, coeficiente_beneficio, coeficiente_consign
         st.error("Erro: A base está vazia.")
         return pd.DataFrame()
     
-    base = base.iloc[:, :23]
+    base = base.iloc[:, :26]
 
     convenio = base['Convenio'].unique()[0]
     base['valor_liberado_beneficio'] = 0
