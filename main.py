@@ -41,7 +41,7 @@ def escolha_campanha(campanha, base, vinculos_invalidos):
 
     margem_limite = st.sidebar.number_input(
         f"Margem {'mínimo' if campanha == 'Novo' else 'máximo'} de margem limite", 
-        min_value=0.0, max_value=1000.0
+        min_value=0.0, max_value=100000.0
     )
     st.sidebar.caption("Exemplo: 150")
 
